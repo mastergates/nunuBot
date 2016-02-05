@@ -1,8 +1,10 @@
 /*Variable area*/
 var Discordbot = require('discord.io');
+var config = require('./config');
+
 var bot = new Discordbot({
-	email: "",
-	password: "",
+	email: config.email,
+	password: config.password,
 	autorun: true
 });
 
