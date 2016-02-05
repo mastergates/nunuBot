@@ -8,6 +8,9 @@ var bot = new Discordbot({
 	autorun: true
 });
 
+//variable for the complete list of memers and their real names
+var memers = [];
+
 /*Event area*/
 bot.on("err", function(error) {
 	console.log(error)
@@ -25,6 +28,25 @@ bot.on("message", function(user, userID, channelID, message, rawEvent) {
 	console.log(message);
 	console.log("----------");
     
+	var mapped = memers.map(function(person) { return person.userID; });
+	var indexMemer = mapped.indexOf(userID);
+	
+	if (indexMemer == -1) { //add new user to memers array
+		console.log('adding new memer to memers[]');
+		
+		var memerName = {userID: userID, nick: user, name: 'unknown'};
+		memers.push(memerName);
+		
+		console.log(memers);
+	} else { //update object in memer array
+		console.log('memer detected in memers[]');
+		
+		var memerObj = memers[indexMemer];
+		memerObj.nick = user;
+		
+		console.log(memers);
+	}
+	
     switch(message) {
         case '!nunu ping':
         case '!ping':
@@ -101,11 +123,66 @@ bot.on("message", function(user, userID, channelID, message, rawEvent) {
 				tts: true
 			});
 			break;
+		case '!whois all':
+			bot.sendMessage({
+				to: channelID,
+				message: JSON.stringify(memers)
+			});
+			break;
+		case '!nunu names':
+		case '!names':
+			var combined = '';
+			var nicks = memers.map(function (e) { return e.nick; });
+			var names = memers.map(function (e) { return e.name; });
+			var i;
+			
+			console.log(nicks);
+			console.log(names);
+			
+			for (i = 0; i < nicks.length; i++) {
+				combined = combined + '\t ```' + nicks[i] + ' = ' + names[i] + '``` \n';
+			}
+			
+			bot.sendMessage({
+				to: channelID,
+				message: combined
+			});
     }
+	
+	if(message.substr(0,9) === '!savename') {
+		var chatInputs = message.split(" ");
+		
+		if (chatInputs.length >= 3) {
+			var name = chatInputs[1];
+			var userID = chatInputs[2];
+			
+			console.log(name);
+			console.log(userID);
+			
+			saveName(name, userID);
+		}
+	}
 });
 
 bot.on("presence", function(user, userID, status, rawEvent) {
-	/*console.log(user + " is now: " + status);*/
+	var mapped = memers.map(function(person) { return person.userID; });
+	var indexMemer = mapped.indexOf(userID);
+	
+	if (indexMemer == -1) { //add new user to memers array
+		console.log('adding new memer to memers[]');
+		
+		var memerName = {userID: userID, nick: user, name: 'unknown'};
+		memers.push(memerName);
+		
+		console.log(memers);
+	} else { //update object in memer array
+		console.log('memer detected in memers[]');
+		
+		var memerObj = memers[indexMemer];
+		memerObj.nick = user;
+		
+		console.log(memers);
+	}
 });
 
 bot.on("debug", function(rawEvent) {
@@ -160,4 +237,16 @@ function sendFiles(channelID, fileArr, interval) {
 		}, interval);
 	}
 	_sendFiles();
+}
+
+function saveName(name, userID) {
+	var mapped = memers.map(function (e) { return e.userID; });
+	var memerIndex = mapped.indexOf(userID);
+	
+	if(memerIndex == -1) {
+		//do nothing
+	} else {
+		var memerObj = memers[memerIndex];
+		memerObj.name = name;
+	}
 }
