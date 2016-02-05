@@ -39,18 +39,17 @@ bot.on("message", function(user, userID, channelID, message, rawEvent) {
         case '!halp':
             bot.sendMessage({
                 to: channelID,
-                message: '*All commands can be called with either*  **!command-name**  *or*  **!nunu command-name** \n\n',
+                message: '*All commands can be called with either*  **!command-name**  *or*  **!nunu command-name** \n\n'+
+							'\t __*More features and commands coming soon*__ \n'+
+							'\t **!nunu help: **  *get this list you\'re looking at right now, you downsie* \n'+
+							'\t **!nunu about: **  *find out who created me* \n'+
+							'\t **!nunu creed: **  *recite our sacred memer oath* \n'+
+							'\t **!nunu normies: **  *activate my anti-normie protocol* \n'+
+							'\t **!nunu time: **  *get the current time* \n'+
+							'\t **!nunu laugh: **  *hear my glorious laugh* \n'+
+							'\t **!nunu ping: **  *ping me you little bitch, I dare you* \n'+
+							'\t **!nunu remember: **  *things to never forget* \n'
             });
-            sendMessages(channelID, [
-                '\t __*More features and commands coming soon*__',
-                '\t **!nunu help: **  *get this list you\'re looking at right now, you downsie*',
-                '\t **!nunu about: **  *find out who created me*',
-                '\t **!nunu creed: **  *recite our sacred memer oath*',
-                '\t **!nunu normies: **  *activate my anti-normie protocol*',
-                '\t **!nunu time: **  *get the current time*',
-                '\t **!nunu laugh: ** *hear my glorious laugh*',
-                '\t **!nunu ping: ** *ping me you little bitch, I dare you*'
-            ]);
             break;
         case '!nunu time':
         case '!time':
@@ -92,6 +91,14 @@ bot.on("message", function(user, userID, channelID, message, rawEvent) {
                 tts: true
             });
             break;
+		case '!nunu remember':
+		case '!remember':
+			bot.sendMessage({
+				to: channelID,
+				message: 'Never forgetto the spaghetto',
+				tts: true
+			});
+			break;
     }
 });
 
